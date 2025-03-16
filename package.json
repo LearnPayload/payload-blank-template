@@ -2,6 +2,7 @@
   "name": "payload-blank-starter",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
@@ -12,6 +13,7 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
     "@payloadcms/db-postgres": "^3.28.1",
     "@payloadcms/next": "^3.28.1",
     "@payloadcms/richtext-lexical": "^3.28.1",

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { User } from "./user"; // user "active record (kinda) model"
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -7,7 +8,15 @@ export const Users: CollectionConfig = {
   },
   auth: true,
   fields: [
-    // Email added by default
-    // Add more fields as needed
+    {
+      name: "id",
+      type: "text",
+      required: true,
+      unique: true,
+      admin: {
+        disabled: true,
+      },
+      defaultValue: User.generateId(),
+    },
   ],
 };
