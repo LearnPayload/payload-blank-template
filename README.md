@@ -12,18 +12,20 @@ A clean, well-structured starting point for building scalable applications with 
 ```
 ├── src/
 │   ├── app/
-│   │   ├── (frontend)/    # Next.js frontend routes and components
-│   │   └── (payload)/     # Payload CMS admin routes
+│   │   ├── (frontend)/   # Next.js frontend routes and components
+│   │   └── (payload)/    # Payload CMS admin routes
 │   ├── config/
-│   │   └── collections/   # Collection definitions
+│   │   └── collections/  # Collection definitions
 │   ├── env.ts            # Environment variables configuration
-│   └── payload.config.ts # Main PayloadCMS configuration
-├── public/              # Static assets
-├── node_modules/        # Dependencies
-├── package.json        # Project configuration and scripts
-├── tsconfig.json      # TypeScript configuration
-├── next.config.ts     # Next.js configuration
-└── eslint.config.mjs  # ESLint configuration
+│   ├── payload.config.ts # Main PayloadCMS configuration
+│   ├── db/
+    │   └── seed.ts       # create your first user
+├── public/               # Static assets
+├── node_modules/         # Dependencies
+├── package.json          # Project configuration and scripts
+├── tsconfig.json         # TypeScript configuration
+├── next.config.ts        # Next.js configuration
+└── eslint.config.mjs     # ESLint configuration
 ```
 
 ## 🛠️ Prerequisites
@@ -67,7 +69,18 @@ A clean, well-structured starting point for building scalable applications with 
 
    The Mailhog web interface will be available at `http://localhost:8025`
 
-6. Start the development server:
+6. Initialize the first admin user:
+
+   ```bash
+   pnpm db:seed
+   ```
+
+   This will create an admin user with:
+
+   - Email: admin@example.com
+   - Password: 1234
+
+7. Start the development server:
    ```bash
    pnpm dev
    ```
@@ -95,13 +108,36 @@ MAIL_PORT="1025"         # Mailhog SMTP port
 MAIL_USERNAME=""         # Not needed for Mailhog
 MAIL_PASSWORD=""         # Not needed for Mailhog
 
+# For production, update these with your SMTP settings:
+# MAIL_HOST="smtp.example.com"
+# MAIL_PORT="587"
+# MAIL_USERNAME="your-email@example.com"
+# MAIL_PASSWORD="your-email-password"
+
 # Deployment Configuration
 NEXT_PUBLIC_VERCEL_URL="http://localhost:3000"
 ```
 
-### Local Email Testing
+### Email Configuration
 
-This template includes a Docker Compose configuration for Mailhog, a local email testing tool. To use it:
+This template uses the official PayloadCMS Nodemailer adapter for handling emails. The configuration can be found in `payload.config.ts`:
+
+```typescript
+email: nodemailerAdapter({
+  defaultFromAddress: "info@payloadcms.com",
+  defaultFromName: "Payload",
+  transportOptions: {
+    host: env.MAIL_HOST,
+    port: Number(env.MAIL_PORT),
+    auth: {
+      user: env.MAIL_USERNAME,
+      pass: env.MAIL_PASSWORD,
+    },
+  },
+}),
+```
+
+For local development, the template includes a Docker Compose configuration for Mailhog. To use it:
 
 1. Start the Mailhog container:
 
@@ -189,11 +225,10 @@ const CustomField = ({ path }) => {
 
 ## 📦 Available Scripts
 
-- `yarn dev` - Start the development server
-- `yarn build` - Build for production
-- `yarn serve` - Serve the production build
-- `yarn generate:types` - Generate TypeScript types
-- `yarn generate:graphQLSchema` - Generate GraphQL schema
+- `pnpm dev` - Start the development server
+- `pnpm build` - Build for production
+- `pnpm serve` - Serve the production build
+- `pnpm generate:types` - Generate TypeScript types
 
 ## 🔒 Security
 
@@ -207,15 +242,11 @@ const CustomField = ({ path }) => {
 
 ### REST API
 
-- `GET /api/collections/{collection}` - List documents
-- `GET /api/collections/{collection}/{id}` - Get single document
-- `POST /api/collections/{collection}` - Create document
-- `PATCH /api/collections/{collection}/{id}` - Update document
-- `DELETE /api/collections/{collection}/{id}` - Delete document
-
-### GraphQL
-
-GraphQL endpoint: `/api/graphql`
+- `GET /api/{collection}` - List documents
+- `GET /api/{collection}/{id}` - Get single document
+- `POST /api/{collection}` - Create document
+- `PATCH /api/{collection}/{id}` - Update document
+- `DELETE /api/{collection}/{id}` - Delete document
 
 ## 🤝 Contributing
 

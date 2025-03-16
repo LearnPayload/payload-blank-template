@@ -27,6 +27,7 @@ This project is built using PayloadCMS, a headless content management system bui
 - Implement proper access control for all collections
 - Structure code for maintainability and scalability
 - Ensure admin UI components are responsive and accessible
+- Always use `pnpm` for dev and installing
 
 # Coding Standards
 
@@ -41,9 +42,9 @@ This project is built using PayloadCMS, a headless content management system bui
 
 # Common Scripts
 
-- `dev`: Starts the development server
-- `build`: Builds the application for production
-- `serve`: Serves the built application
+- `pnpm dev`: Starts the development server
+- `pnpm build`: Builds the application for production
+- `pnpm serve`: Serves the built application
 
 # API Conventions
 
