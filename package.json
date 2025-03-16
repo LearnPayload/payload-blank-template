@@ -11,7 +11,7 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "db:seed": "cross-env NODE_OPTIONS=--no-deprecation payload src/db/seed.ts"
+    "db:seed": "cross-env NODE_OPTIONS=--no-deprecation npx payload run src/db/seed.ts"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
@@ -19,15 +19,21 @@
     "@payloadcms/email-nodemailer": "^3.28.1",
     "@payloadcms/next": "^3.28.1",
     "@payloadcms/richtext-lexical": "^3.28.1",
+    "@radix-ui/react-slot": "^1.1.2",
     "@t3-oss/env-nextjs": "^0.12.0",
     "@types/nodemailer": "^6.4.17",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "graphql": "^16.10.0",
+    "lucide-react": "^0.482.0",
     "next": "15.2.2",
     "nodemailer": "^6.10.0",
     "payload": "^3.28.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sharp": "^0.33.5",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.2"
   },
   "devDependencies": {

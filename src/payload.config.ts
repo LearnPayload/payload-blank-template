@@ -43,7 +43,7 @@ export default buildConfig({
   // database-adapter-config-start
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || "",
+      connectionString: env.DATABASE_URL || "",
     },
   }),
   // database-adapter-config-end

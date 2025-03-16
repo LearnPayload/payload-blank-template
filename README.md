@@ -1,11 +1,15 @@
 # PayloadCMS Blank Template
 
-A clean, well-structured starting point for building scalable applications with PayloadCMS. This template provides a solid foundation with best practices and a modular architecture.
+A clean, well-structured starting point for creating a PayloadCMS app.
 
 ## 🚀 Features
 
-- Clear organization for config and utility files.
-- Postgres
+- Clear organization of the project structure.
+- Postgres config already set up.
+- Typesafe environment variables.
+- Email system with local testing via MailHog.
+- Tailwind and Shadcn/UI
+- Payload's beautiful admin dashboard.
 
 ## 📁 Project Structure
 
@@ -14,18 +18,20 @@ A clean, well-structured starting point for building scalable applications with 
 │   ├── app/
 │   │   ├── (frontend)/   # Next.js frontend routes and components
 │   │   └── (payload)/    # Payload CMS admin routes
-│   ├── config/
-│   │   └── collections/  # Collection definitions
-│   ├── env.ts            # Environment variables configuration
+│   ├── components/
+│   │   └── ui/          # shadcn/ui components
+│   ├── config/          # Payload configuration files (collections, globals, etc)
+│   │   └── collections/ # Collection definitions
+│   ├── env.ts           # Environment variables configuration
 │   ├── payload.config.ts # Main PayloadCMS configuration
-│   ├── db/
-    │   └── seed.ts       # create your first user
-├── public/               # Static assets
-├── node_modules/         # Dependencies
-├── package.json          # Project configuration and scripts
-├── tsconfig.json         # TypeScript configuration
-├── next.config.ts        # Next.js configuration
-└── eslint.config.mjs     # ESLint configuration
+│   └── db/
+        └── seed.ts      # Create your first user
+├── public/              # Static assets
+├── docker-compose.yml   # Docker configuration (MailHog)
+├── package.json         # Project configuration and scripts
+├── tsconfig.json        # TypeScript configuration
+├── next.config.ts       # Next.js configuration
+└── eslint.config.mjs    # ESLint configuration
 ```
 
 ## 🛠️ Prerequisites
@@ -37,18 +43,16 @@ A clean, well-structured starting point for building scalable applications with 
 
 ## 🚦 Getting Started
 
-1. Clone this template (degit or clone):
+1. Clone this template:
 
    ```bash
-   degit LearnPayload/payload-blank-template my-payload-app
-   # or
-   git clone git@github.com:LearnPayload/payload-blank-template.git my-payload-app
+   npx degit LearnPayload/payload-blank-template my-payload-app
    ```
 
 2. Navigate to the project:
 
    ```bash
-   cd my-project
+   cd my-payload-app
    ```
 
 3. Install dependencies:
