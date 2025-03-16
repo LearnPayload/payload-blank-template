@@ -1,4 +1,4 @@
-# PayloadCMS Blank Template
+# PayloadCMS Starter Template
 
 A clean, well-structured starting point for creating a PayloadCMS app.
 
