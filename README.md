@@ -66,10 +66,10 @@ A clean, well-structured starting point for building scalable applications with 
 5. Generate a secure PAYLOAD_SECRET:
 
    ```bash
-   pnpm generate:secret
+   openssl rand -base64 32
    ```
 
-   This will append a secure random string to your .env file.
+   You can then copy the output to set the `PAYLOAD_SECRET` in your .env file
 
 6. (Optional) Start the local email testing server:
 
