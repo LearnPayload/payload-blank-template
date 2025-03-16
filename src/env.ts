@@ -20,7 +20,7 @@ export const env = createEnv({
     PAYLOAD_SECRET: z.string(),
     MAIL_MAILER: z.string(),
     MAIL_HOST: z.string(),
-    MAIL_PORT: z.string(),
+    MAIL_PORT: z.coerce.number(),
     MAIL_USERNAME: z.string().optional(),
     MAIL_PASSWORD: z.string().optional(),
   },

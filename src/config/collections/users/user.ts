@@ -4,6 +4,7 @@ import { createId } from "@paralleldrive/cuid2";
 import {
   CollectionSlug,
   RequiredDataFromCollectionSlug,
+  SendEmailOptions,
   TypedUser,
   Where,
 } from "payload";
@@ -33,10 +34,6 @@ export class User {
     });
 
     return new User(user);
-  };
-
-  static generateId = () => {
-    return `user_${createId()}`;
   };
 
   static updateOrCreate = async (
@@ -106,4 +103,12 @@ export class User {
       data,
     });
   }
+  async sendEmail(message: Omit<SendEmailOptions, "to">) {
+    const payload = await getPayload();
+    await payload.sendEmail({ ...message, to: this.data.email });
+  }
 }
+
+export const generateId = () => {
+  return `user_${createId()}`;
+};

@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { User } from "./user"; // user "active record (kinda) model"
+import { generateId } from "./user"; // user "active record (kinda) model"
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -16,7 +16,7 @@ export const Users: CollectionConfig = {
       admin: {
         disabled: true,
       },
-      defaultValue: User.generateId(),
+      defaultValue: () => generateId(),
     },
   ],
 };

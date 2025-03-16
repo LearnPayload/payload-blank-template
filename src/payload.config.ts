@@ -33,11 +33,8 @@ export default buildConfig({
     // Nodemailer transportOptions
     transportOptions: {
       host: env.MAIL_HOST,
-      port: Number(env.MAIL_PORT),
-      auth: {
-        user: env.MAIL_USERNAME,
-        pass: env.MAIL_PASSWORD,
-      },
+      port: env.MAIL_PORT,
+      auth: {},
     },
   }),
   // database-adapter-config-start

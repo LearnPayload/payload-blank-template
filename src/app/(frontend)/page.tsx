@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="container mx-auto px-4 py-16">
       {/* Hero Section */}
