@@ -1,0 +1,599 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# PayloadCMS Project Overview
+
+This project is built using PayloadCMS, a headless content management system built with TypeScript, Express, MongoDB, and React. This document provides context for Cursor AI to assist with PayloadCMS development.
+
+# Project Structure
+
+- **collections/**: Contains collection definitions
+- **globals/**: Contains global definitions
+- **fields/**: Reusable field configurations
+- **hooks/**: Contains lifecycle hooks
+- **access/**: Contains access control functions
+- **components/**: Custom admin components
+- **endpoints/**: Custom API endpoints
+- **utilities/**: Helper functions
+
+# Development Guidelines
+
+- Use TypeScript for type safety
+- Follow a modular approach for collections and fields
+- Use consistent naming conventions (camelCase for variables, PascalCase for components)
+- Write meaningful comments for complex logic
+- Implement proper access control for all collections
+- Structure code for maintainability and scalability
+- Ensure admin UI components are responsive and accessible
+
+# Coding Standards
+
+- Prefer functional components over class components
+- Use async/await over promise chains
+- Use named exports for better code discoverability
+- Include TypeScript types for all functions and variables
+- Keep single collection files under 500 lines - extract components when needed
+- Use proper error handling with try/catch blocks
+- Implement consistent error messaging
+- Follow the Single Responsibility Principle
+
+# Common Scripts
+
+- `dev`: Starts the development server
+- `build`: Builds the application for production
+- `serve`: Serves the built application
+
+# API Conventions
+
+- Use descriptive endpoint names
+- Follow RESTful principles
+- Return consistent error responses
+- Include appropriate HTTP status codes
+
+## Core Concepts
+
+PayloadCMS is a headless CMS built with TypeScript, Express, MongoDB, and React. It provides powerful features for content management while allowing developers to maintain control over their code.
+
+## Basic Configuration
+
+The main configuration file is `payload.config.ts`:
+
+```typescript
+import { buildConfig } from 'payload/config';
+import { mongooseAdapter } from '@payloadcms/db-mongodb';
+import { webpackBundler } from '@payloadcms/bundler-webpack';
+import { slateEditor } from '@payloadcms/richtext-slate';
+import path from 'path';
+
+// Import collections
+import Users from './collections/Users';
+import Posts from './collections/Posts';
+import Media from './collections/Media';
+
+// Import globals
+import SiteSettings from './globals/SiteSettings';
+
+export default buildConfig({
+  admin: {
+    user: 'users',
+    bundler: webpackBundler(),
+  },
+  editor: slateEditor({}),
+  collections: [Users, Posts, Media],
+  globals: [SiteSettings],
+  typescript: {
+    outputFile: path.resolve(__dirname, 'payload-types.ts'),
+  },
+  graphQL: {
+    schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
+  },
+  plugins: [],
+  db: mongooseAdapter({
+    url: process.env.MONGODB_URI,
+  }),
+});
+```
+
+## Collections
+
+Collections are the primary content structures in PayloadCMS. Each collection is defined in its own file:
+
+```typescript
+import { CollectionConfig } from 'payload/types';
+
+const Posts: CollectionConfig = {
+  slug: 'posts',
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'author', 'status', 'createdAt'],
+  },
+  access: {
+    read: () => true,
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'content',
+      type: 'richText',
+      required: true,
+    },
+    {
+      name: 'status',
+      type: 'select',
+      options: [
+        {
+          label: 'Draft',
+          value: 'draft',
+        },
+        {
+          label: 'Published',
+          value: 'published',
+        },
+      ],
+      defaultValue: 'draft',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+  ],
+};
+
+export default Posts;
+```
+
+## Field Types
+
+PayloadCMS provides many field types:
+
+- `text`: Simple text input
+- `textarea`: Multi-line text input
+- `number`: Numeric input
+- `checkbox`: Boolean toggle
+- `date`: Date picker
+- `email`: Email input with validation
+- `password`: Password input with hashing
+- `rich-text`: WYSIWYG editor
+- `upload`: File upload field
+- `relationship`: Reference to another collection
+- `select`: Dropdown or multi-select
+- `array`: Repeating items
+- `blocks`: Flexible content blocks
+- `group`: Group of fields
+- `tabs`: Tabbed interface for organizing fields
+- `row`: Layout helper for admin UI
+- `collapsible`: Collapsible section for admin UI
+- `json`: Raw JSON field
+
+## Access Control
+
+Access control defines who can perform CRUD operations:
+
+```typescript
+import { Access } from 'payload/types';
+
+// Example access control functions
+export const isAdmin: Access = ({ req: { user } }) => {
+  return Boolean(user?.roles?.includes('admin'));
+};
+
+export const isAdminOrEditor: Access = ({ req: { user } }) => {
+  return Boolean(
+    user?.roles?.includes('admin') || user?.roles?.includes('editor')
+  );
+};
+
+export const isLoggedIn: Access = ({ req: { user } }) => {
+  return Boolean(user);
+};
+
+// Collection-level access control
+const access = {
+  create: isAdminOrEditor,
+  read: () => true, // Public read access
+  update: isAdminOrEditor,
+  delete: isAdmin,
+};
+
+// Field-level access control
+const sensitiveField = {
+  name: 'internalNotes',
+  type: 'text',
+  access: {
+    read: isAdmin,
+    update: isAdmin,
+  },
+};
+```
+
+## Hooks
+
+Hooks allow custom logic at various points in the document lifecycle:
+
+```typescript
+// Collection hooks
+const hooks = {
+  beforeOperation: async ({ args }) => {
+    // Before any operation
+    return args;
+  },
+  beforeValidate: async ({ data, req, operation }) => {
+    // Before validation
+    return data;
+  },
+  beforeChange: async ({ data, req, operation }) => {
+    // Before saving to database
+    return data;
+  },
+  afterChange: async ({ doc, req, operation }) => {
+    // After create/update
+    return doc;
+  },
+  afterRead: async ({ doc, req }) => {
+    // After reading from database
+    return doc;
+  },
+  beforeDelete: async ({ req, id }) => {
+    // Before delete
+  },
+  afterDelete: async ({ req, id }) => {
+    // After delete
+  },
+};
+
+// Field hooks
+const fieldWithHooks = {
+  name: 'slug',
+  type: 'text',
+  hooks: {
+    beforeValidate: [
+      ({ value, data }) => {
+        if (data.title && !value) {
+          return slugify(data.title.toLowerCase());
+        }
+        return value;
+      },
+    ],
+  },
+};
+```
+
+## Globals
+
+Globals are single-instance collections for site-wide settings:
+
+```typescript
+import { GlobalConfig } from 'payload/types';
+
+const SiteSettings: GlobalConfig = {
+  slug: 'site-settings',
+  label: 'Site Settings',
+  access: {
+    read: () => true,
+  },
+  fields: [
+    {
+      name: 'siteName',
+      label: 'Site Name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'siteDescription',
+      label: 'Site Description',
+      type: 'textarea',
+    },
+    {
+      name: 'logo',
+      label: 'Site Logo',
+      type: 'upload',
+      relationTo: 'media',
+    },
+  ],
+};
+
+export default SiteSettings;
+```
+
+## Custom Components
+
+PayloadCMS allows custom React components for the admin UI:
+
+```typescript
+import React from 'react';
+import { useField } from 'payload/components/forms';
+
+const CustomComponent = ({ path }) => {
+  const { value, setValue } = useField({ path });
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={value || ''}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    </div>
+  );
+};
+
+export default CustomComponent;
+```
+
+## Custom Endpoints
+
+You can create custom API endpoints:
+
+```typescript
+import { Payload } from 'payload';
+
+const customEndpoint = {
+  path: '/api/custom',
+  method: 'get',
+  handler: async (req, res, next) => {
+    try {
+      const { payload } = req;
+      
+      // Fetch data
+      const posts = await payload.find({
+        collection: 'posts',
+        where: {
+          status: {
+            equals: 'published',
+          },
+        },
+        sort: '-publishedDate',
+        limit: 10,
+      });
+      
+      res.status(200).json({
+        success: true,
+        data: posts,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+};
+```
+
+## Plugins
+
+PayloadCMS supports plugins for extending functionality:
+
+```typescript
+import { Plugin } from 'payload/types';
+
+const customPlugin: Plugin = {
+  collections: [
+    // Additional collections
+  ],
+  globals: [
+    // Additional globals
+  ],
+  beforeInit: (payload) => {
+    // Run code before Payload initializes
+  },
+  afterInit: (payload) => {
+    // Run code after Payload initializes
+  },
+};
+```
+
+## Authentication
+
+A basic users collection with authentication:
+
+```typescript
+import { CollectionConfig } from 'payload/types';
+
+const Users: CollectionConfig = {
+  slug: 'users',
+  auth: {
+    // Enable authentication for this collection
+    useAPIKey: true, // Optional: enable API key authentication
+    tokenExpiration: 7200, // 2 hours
+    maxLoginAttempts: 5, // Lock account after 5 failed attempts
+    lockTime: 600000, // 10 minutes
+  },
+  admin: {
+    useAsTitle: 'email',
+  },
+  access: {
+    read: () => true,
+  },
+  fields: [
+    {
+      name: 'name',
+      type: 'text',
+    },
+    {
+      name: 'roles',
+      type: 'select',
+      hasMany: true,
+      options: ['admin', 'editor', 'user'],
+      defaultValue: ['user'],
+    },
+  ],
+};
+
+export default Users;
+```
+
+## Localization
+
+Enabling multi-language content:
+
+```typescript
+// In payload.config.ts
+export default buildConfig({
+  // ...
+  localization: {
+    defaultLocale: 'en',
+    locales: ['en', 'es', 'fr'],
+  },
+  // ...
+});
+
+// In a collection
+const Posts: CollectionConfig = {
+  // ...
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      localized: true, // Enable localization for this field
+    },
+    // ...
+  ],
+};
+```
+
+## Query Operators
+
+Common query operators for filtering documents:
+
+```typescript
+// equals
+const exactMatch = {
+  status: {
+    equals: 'published',
+  },
+};
+
+// not_equals
+const notMatch = {
+  status: {
+    not_equals: 'draft',
+  },
+};
+
+// in
+const inArray = {
+  status: {
+    in: ['published', 'archived'],
+  },
+};
+
+// not_in
+const notInArray = {
+  status: {
+    not_in: ['draft', 'review'],
+  },
+};
+
+// greater_than / less_than
+const priceRange = {
+  price: {
+    greater_than: 10,
+    less_than: 100,
+  },
+};
+
+// like (substring match)
+const containsText = {
+  title: {
+    like: 'product',
+  },
+};
+
+// exists
+const hasField = {
+  featuredImage: {
+    exists: true,
+  },
+};
+
+// and / or for complex queries
+const complexQuery = {
+  and: [
+    {
+      status: {
+        equals: 'published',
+      },
+    },
+    {
+      or: [
+        {
+          title: {
+            like: 'featured',
+          },
+        },
+        {
+          featured: {
+            equals: true,
+          },
+        },
+      ],
+    },
+  ],
+};
+```
+
+## API Reference
+
+Common API operations:
+
+```typescript
+// Find documents
+const posts = await payload.find({
+  collection: 'posts',
+  where: {
+    status: {
+      equals: 'published',
+    },
+  },
+  sort: '-publishedDate',
+  limit: 10,
+  page: 1,
+  depth: 2, // populate relationships 2 levels deep
+});
+
+// Find by ID
+const post = await payload.findByID({
+  collection: 'posts',
+  id: '123',
+});
+
+// Create document
+const newPost = await payload.create({
+  collection: 'posts',
+  data: {
+    title: 'New Post',
+    content: 'Content here',
+  },
+});
+
+// Update document
+const updatedPost = await payload.update({
+  collection: 'posts',
+  id: '123',
+  data: {
+    title: 'Updated Title',
+  },
+});
+
+// Delete document
+await payload.delete({
+  collection: 'posts',
+  id: '123',
+});
+
+// Get global
+const siteSettings = await payload.findGlobal({
+  slug: 'site-settings',
+});
+
+// Update global
+await payload.updateGlobal({
+  slug: 'site-settings',
+  data: {
+    siteName: 'Updated Site Name',
+  },
+});
+```
