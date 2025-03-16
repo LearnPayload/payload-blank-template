@@ -46,7 +46,7 @@ A clean, well-structured starting point for creating a PayloadCMS app.
 1. Clone this template:
 
    ```bash
-   npx degit LearnPayload/payload-blank-template my-payload-app
+   pnpm dlx degit LearnPayload/payload-blank-template my-payload-app
    ```
 
 2. Navigate to the project:
