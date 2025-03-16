@@ -37,10 +37,12 @@ A clean, well-structured starting point for building scalable applications with 
 
 ## 🚦 Getting Started
 
-1. Clone this template:
+1. Clone this template (degit or clone):
 
    ```bash
-   npx create-payload-app@latest my-project --template blank
+   degit LearnPayload/payload-blank-template my-payload-app
+   # or
+   git clone git@github.com:LearnPayload/payload-blank-template.git my-payload-app
    ```
 
 2. Navigate to the project:
@@ -61,7 +63,15 @@ A clean, well-structured starting point for building scalable applications with 
    cp .env.example .env
    ```
 
-5. (Optional) Start the local email testing server:
+5. Generate a secure PAYLOAD_SECRET:
+
+   ```bash
+   pnpm generate:secret
+   ```
+
+   This will append a secure random string to your .env file.
+
+6. (Optional) Start the local email testing server:
 
    ```bash
    docker compose up -d mailhog
@@ -69,7 +79,7 @@ A clean, well-structured starting point for building scalable applications with 
 
    The Mailhog web interface will be available at `http://localhost:8025`
 
-6. Initialize the first admin user:
+7. Run init script (includes seeding first user):
 
    ```bash
    pnpm db:seed
@@ -80,7 +90,7 @@ A clean, well-structured starting point for building scalable applications with 
    - Email: admin@example.com
    - Password: 1234
 
-7. Start the development server:
+8. Start the development server:
    ```bash
    pnpm dev
    ```
