@@ -10,6 +10,7 @@ A clean, well-structured starting point for creating a PayloadCMS app.
 - Email system with local testing via MailHog.
 - Tailwind and Shadcn/UI
 - Payload's beautiful admin dashboard.
+- Cursor IDE Ready (includes a .cursor rules file)
 
 ## 📁 Project Structure
 
@@ -31,7 +32,8 @@ A clean, well-structured starting point for creating a PayloadCMS app.
 ├── package.json         # Project configuration and scripts
 ├── tsconfig.json        # TypeScript configuration
 ├── next.config.ts       # Next.js configuration
-└── eslint.config.mjs    # ESLint configuration
+├── eslint.config.mjs    # ESLint configuration
+└── .cursor/rules/...    # Contextual rules for Cursor IDE
 ```
 
 ## 🛠️ Prerequisites
@@ -169,98 +171,25 @@ For production, update the mail configuration in your `.env` file with your actu
 
 ### Database
 
-This template uses PostgreSQL. The database configuration can be found in `payload.config.ts`:
-
-```typescript
-export default buildConfig({
-  db: postgresAdapter({
-    pool: {
-      connectionString: process.env.DATABASE_URL,
-    },
-  }),
-  // ... other config
-});
-```
+This template uses PostgreSQL. The database configuration can be found in `src/payload.config.ts`:
 
 ## 📚 Key Concepts
 
-### Collections
+### Payload Configurations/Customization
 
-Collections are the primary content structures. Create new collections in the `collections` directory:
-
-```typescript
-// collections/Posts.ts
-import { CollectionConfig } from "payload/types";
-
-const Posts: CollectionConfig = {
-  slug: "posts",
-  fields: [
-    {
-      name: "title",
-      type: "text",
-      required: true,
-    },
-    // ... more fields
-  ],
-};
-
-export default Posts;
-```
-
-### Access Control
-
-Implement access control in the `access` directory:
-
-```typescript
-// access/isAdmin.ts
-import { Access } from "payload/types";
-
-export const isAdmin: Access = ({ req: { user } }) => {
-  return Boolean(user?.roles?.includes("admin"));
-};
-```
-
-### Custom Components
-
-Create custom admin UI components in the `components` directory:
-
-```typescript
-// components/CustomField.tsx
-import React from 'react';
-import { useField } from 'payload/components/forms';
-
-const CustomField = ({ path }) => {
-  const { value, setValue } = useField({ path });
-  return (
-    // ... component implementation
-  );
-};
-```
+This project reserves the `src/config` folder for all Payload configurations and customizations/components, etc.
 
 ## 📦 Available Scripts
 
 - `pnpm dev` - Start the development server
 - `pnpm build` - Build for production
 - `pnpm serve` - Serve the production build
-- `pnpm generate:types` - Generate TypeScript types
-
-## 🔒 Security
-
-- All authentication routes are automatically created
-- API keys can be enabled per collection
-- Access control can be implemented at both collection and field levels
-- Passwords are automatically hashed
-- JWT tokens are used for authentication
-
-## 🌐 API Reference
-
-### REST API
-
-- `GET /api/{collection}` - List documents
-- `GET /api/{collection}/{id}` - Get single document
-- `POST /api/{collection}` - Create document
-- `PATCH /api/{collection}/{id}` - Update document
-- `DELETE /api/{collection}/{id}` - Delete document
+- `pnpm generate:types` - Generate TypeScript types for collections
+- `pnpm generate:importmap` - Regenerate the import map
+- `pnpm lint` - ESLint validation across the project
+- `pnpm prettier` - Format all project files (excluding anything in the `(payload)` folder)
+- `pnpm typecheck` - Type checking across all project files.
+- `pnpm db:seed` - Seed the database with any testing data you need.
 
 ## 🤝 Contributing
 
@@ -268,7 +197,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## 💡 Support
 
