@@ -1,5 +1,3 @@
-import { getPayload } from "@/get-payload";
-import { User as UserType } from "@/payload-types";
 import { createId } from "@paralleldrive/cuid2";
 import {
   CollectionSlug,
@@ -8,6 +6,9 @@ import {
   TypedUser,
   Where,
 } from "payload";
+
+import { getPayload } from "@/get-payload";
+import { User as UserType } from "@/payload-types";
 
 export class User {
   collection: CollectionSlug = "users";
@@ -38,7 +39,7 @@ export class User {
 
   static updateOrCreate = async (
     lookup: Where,
-    data: RequiredDataFromCollectionSlug<"users">
+    data: RequiredDataFromCollectionSlug<"users">,
   ) => {
     const payload = await getPayload();
     const found = await payload.db.findOne({
@@ -77,7 +78,7 @@ export class User {
 
   static findFirstOrCreate = async (
     lookup: Where,
-    data: RequiredDataFromCollectionSlug<"users">
+    data: RequiredDataFromCollectionSlug<"users">,
   ) => {
     const payload = await getPayload();
     const found = await payload.find({
@@ -107,8 +108,7 @@ export class User {
     const payload = await getPayload();
     await payload.sendEmail({ ...message, to: this.data.email });
   }
+  static generateId = () => {
+    return `user_${createId()}`;
+  };
 }
-
-export const generateId = () => {
-  return `user_${createId()}`;
-};

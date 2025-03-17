@@ -28,6 +28,7 @@ This project is built using PayloadCMS, a headless content management system bui
 - Structure code for maintainability and scalability
 - Ensure admin UI components are responsive and accessible
 - Always use `pnpm` for dev and installing
+- Use "kabob-case" when naming files.
 
 # Coding Standards
 
@@ -35,10 +36,7 @@ This project is built using PayloadCMS, a headless content management system bui
 - Use async/await over promise chains
 - Use named exports for better code discoverability
 - Include TypeScript types for all functions and variables
-- Keep single collection files under 500 lines - extract components when needed
-- Use proper error handling with try/catch blocks
 - Implement consistent error messaging
-- Follow the Single Responsibility Principle
 
 # Common Scripts
 
@@ -55,26 +53,26 @@ This project is built using PayloadCMS, a headless content management system bui
 
 ## Core Concepts
 
-PayloadCMS is a headless CMS built with TypeScript, Express, MongoDB, and React. It provides powerful features for content management while allowing developers to maintain control over their code.
+PayloadCMS is a headless CMS built with TypeScript and React. It provides powerful features for content management while allowing developers to maintain control over their code.
 
 ## Basic Configuration
 
 The main configuration file is `payload.config.ts`:
 
 ```typescript
-import { buildConfig } from 'payload/config';
-import { mongooseAdapter } from '@payloadcms/db-mongodb';
-import { webpackBundler } from '@payloadcms/bundler-webpack';
-import { slateEditor } from '@payloadcms/richtext-slate';
-import path from 'path';
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import path from "path";
+import { buildConfig } from "payload";
+import { fileURLToPath } from "url";
+import sharp from "sharp";
 
 // Import collections
-import Users from './collections/Users';
-import Posts from './collections/Posts';
-import Media from './collections/Media';
+import Users from './config/collections/users';
+import Posts from './config/collections/posts';
+import Media from './config/collections/media';
 
 // Import globals
-import SiteSettings from './globals/SiteSettings';
+import SiteSettings from './config/globals/site-settings';
 
 export default buildConfig({
   admin: {

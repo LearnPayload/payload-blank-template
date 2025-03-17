@@ -1,15 +1,15 @@
 // storage-adapter-import-placeholder
+import { Media } from "./config/collections/media";
+import { Users } from "./config/collections/users";
+import { env } from "./env";
+import { beforeNavLinks } from "@config/custom/components/before-nav-links";
+import { postgresAdapter } from "@payloadcms/db-postgres";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import path from "path";
 import { buildConfig } from "payload";
-import { fileURLToPath } from "url";
 import sharp from "sharp";
-
-import { Users } from "./config/collections/users/config";
-import { Media } from "./config/collections/media/config";
-import { postgresAdapter } from "@payloadcms/db-postgres";
-import { env } from "./env";
-import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { fileURLToPath } from "url";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -17,6 +17,9 @@ const dirname = path.dirname(filename);
 export default buildConfig({
   admin: {
     user: Users.slug,
+    components: {
+      beforeNavLinks,
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },

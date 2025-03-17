@@ -9,16 +9,21 @@
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
+    "prettier": "prettier --write .",
+    "typecheck": "cross-env NODE_OPTIONS=--no-deprecation npx tsc",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "db:seed": "cross-env NODE_OPTIONS=--no-deprecation npx payload run src/db/seed.ts"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
+    "@payloadcms/bundler-webpack": "^1.0.7",
     "@payloadcms/db-postgres": "^3.28.1",
     "@payloadcms/email-nodemailer": "^3.28.1",
     "@payloadcms/next": "^3.28.1",
     "@payloadcms/richtext-lexical": "^3.28.1",
+    "@payloadcms/richtext-slate": "^3.28.1",
+    "@payloadcms/ui": "3.28.1",
     "@radix-ui/react-slot": "^1.1.2",
     "@t3-oss/env-nextjs": "^0.12.0",
     "@types/nodemailer": "^6.4.17",
@@ -39,12 +44,16 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
+    "prettier": "^3.5.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
