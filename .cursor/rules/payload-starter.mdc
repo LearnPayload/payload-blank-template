@@ -1,598 +1,109 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
-# PayloadCMS Project Overview
+  # NextJS/React Context
+  
+  You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
+  
+  Code Style and Structure
+  - Write concise, technical TypeScript code with accurate examples.
+  - Use functional and declarative programming patterns; avoid classes.
+  - Prefer iteration and modularization over code duplication.
+  - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+  - Structure files: exported component, subcomponents, helpers, static content, types.
+  
+  Naming Conventions
+  - Use lowercase with dashes for directories (e.g., components/auth-wizard).
+  - Favor named exports for components.
+  
+  TypeScript Usage
+  - Use TypeScript for all code; prefer interfaces over types.
+  - Avoid enums; use maps instead.
+  - Use functional components with TypeScript interfaces.
+  
+  Syntax and Formatting
+  - Use the "function" keyword for pure functions.
+  - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
+  - Use declarative JSX.
+  
+  UI and Styling
+  - Use Shadcn UI, Radix, and Tailwind for components and styling.
+  - Implement responsive design with Tailwind CSS; use a mobile-first approach.
+  
+  Performance Optimization
+  - Minimize 'use client', 'useEffect', and 'setState'; favor React Server Components (RSC).
+  - Wrap client components in Suspense with fallback.
+  - Use dynamic loading for non-critical components.
+  - Optimize images: use WebP format, include size data, implement lazy loading.
+  
+  Follow Next.js docs for Data Fetching, Rendering, and Routing.
+  
+
+# PayloadCMS Context
 
 This project is built using PayloadCMS, a headless content management system built with TypeScript, Express, MongoDB, and React. This document provides context for Cursor AI to assist with PayloadCMS development.
 
-# Project Structure
-
-- **collections/**: Contains collection definitions
-- **globals/**: Contains global definitions
-- **fields/**: Reusable field configurations
-- **hooks/**: Contains lifecycle hooks
-- **access/**: Contains access control functions
-- **components/**: Custom admin components
-- **endpoints/**: Custom API endpoints
-- **utilities/**: Helper functions
+Follow PayloadCMS docs for field and globals configuration.
 
 # Development Guidelines
 
-- Use TypeScript for type safety
-- Follow a modular approach for collections and fields
+- Custom UI and field components can usually be imported from `@payloadcms/ui`
+- Ensure all additional libraries used along side Payload (e.g. `@payloadcms/ui`) are installed with the same version installed as Paylaod. For example, if the project has installed `@payloadcms/next@3.28.1` then the ui package needs to be installed the same `pnpm add @payloadcms/ui@3.28.1`. This applies to all payload related libraries.
 - Use consistent naming conventions (camelCase for variables, PascalCase for components)
 - Write meaningful comments for complex logic
-- Implement proper access control for all collections
-- Structure code for maintainability and scalability
-- Ensure admin UI components are responsive and accessible
 - Always use `pnpm` for dev and installing
 - Use "kabob-case" when naming files.
-
-# Coding Standards
-
-- Prefer functional components over class components
-- Use async/await over promise chains
-- Use named exports for better code discoverability
-- Include TypeScript types for all functions and variables
-- Implement consistent error messaging
-
-# Common Scripts
-
-- `pnpm dev`: Starts the development server
-- `pnpm build`: Builds the application for production
-- `pnpm serve`: Serves the built application
-
-# API Conventions
-
-- Use descriptive endpoint names
-- Follow RESTful principles
-- Return consistent error responses
-- Include appropriate HTTP status codes
-
-## Core Concepts
-
-PayloadCMS is a headless CMS built with TypeScript and React. It provides powerful features for content management while allowing developers to maintain control over their code.
-
-## Basic Configuration
-
-The main configuration file is `payload.config.ts`:
-
-```typescript
-import { lexicalEditor } from "@payloadcms/richtext-lexical";
-import path from "path";
-import { buildConfig } from "payload";
-import { fileURLToPath } from "url";
-import sharp from "sharp";
-
-// Import collections
-import Users from './config/collections/users';
-import Posts from './config/collections/posts';
-import Media from './config/collections/media';
-
-// Import globals
-import SiteSettings from './config/globals/site-settings';
-
-export default buildConfig({
-  admin: {
-    user: 'users',
-    bundler: webpackBundler(),
-  },
-  editor: slateEditor({}),
-  collections: [Users, Posts, Media],
-  globals: [SiteSettings],
-  typescript: {
-    outputFile: path.resolve(__dirname, 'payload-types.ts'),
-  },
-  graphQL: {
-    schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
-  },
-  plugins: [],
-  db: mongooseAdapter({
-    url: process.env.MONGODB_URI,
-  }),
-});
-```
-
-## Collections
-
-Collections are the primary content structures in PayloadCMS. Each collection is defined in its own file:
-
-```typescript
-import { CollectionConfig } from 'payload/types';
-
-const Posts: CollectionConfig = {
-  slug: 'posts',
-  admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'author', 'status', 'createdAt'],
-  },
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'title',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'content',
-      type: 'richText',
-      required: true,
-    },
-    {
-      name: 'status',
-      type: 'select',
-      options: [
-        {
-          label: 'Draft',
-          value: 'draft',
-        },
-        {
-          label: 'Published',
-          value: 'published',
-        },
-      ],
-      defaultValue: 'draft',
-      admin: {
-        position: 'sidebar',
-      },
-    },
-  ],
-};
-
-export default Posts;
-```
+- All strictly payload configuration and customization code, custom fields, etc, can be placed in the `src/config` folder.
 
 ## Field Types
 
-PayloadCMS provides many field types:
+PayloadCMS provides these field types:
 
-- `text`: Simple text input
-- `textarea`: Multi-line text input
-- `number`: Numeric input
-- `checkbox`: Boolean toggle
-- `date`: Date picker
-- `email`: Email input with validation
-- `password`: Password input with hashing
-- `rich-text`: WYSIWYG editor
-- `upload`: File upload field
-- `relationship`: Reference to another collection
-- `select`: Dropdown or multi-select
-- `array`: Repeating items
-- `blocks`: Flexible content blocks
-- `group`: Group of fields
-- `tabs`: Tabbed interface for organizing fields
-- `row`: Layout helper for admin UI
-- `collapsible`: Collapsible section for admin UI
-- `json`: Raw JSON field
+- `Array`: The Array Field is used when you need to have a set of "repeating" Fields.
+- `Blocks`: The Blocks Field is incredibly powerful, storing an array of objects based on the fields that you define, where each item in the array is a "block" with its own unique schema.
+- `Checkbox`: The Checkbox Field saves a boolean in the database.
+- `JSON`: The JSON Field saves raw JSON to the database and provides the Admin Panel with a code editor styled interface. This is different from the Code Field which saves the value as a string in the database.
+- `Code`: The Code Field saves a string in the database, but provides the Admin Panel with a code editor styled interface.
+- `Collapsible`: The Collapsible Field is presentational-only and only affects the Admin Panel. By using it, you can place fields within a nice layout component that can be collapsed / expanded.
+- `Date`: The Date Field saves a Date in the database and provides the Admin Panel with a customizable time picker interface.
+- `Email`: The Email Field enforces that the value provided is a valid email address.
+- `Group`: The Group Field allows Fields to be nested under a common property name. It also groups fields together visually in the Admin Panel.
+- `Number`: The Number Field stores and validates numeric entry and supports additional numerical validation and formatting features.
+- `Point`: The Point Field saves a pair of coordinates in the database and assigns an index for location related queries. The data structure in the database matches the GeoJSON structure to represent point. The Payload API simplifies the object data to only the [longitude, latitude] location.
+- `Radio Group`: The Radio Field allows for the selection of one value from a predefined set of possible values and presents a radio group-style set of inputs to the Admin Panel.
+- `Relationship`: The Relationship Field is one of the most powerful fields Payload features. It provides the ability to easily relate documents together.
+- `Rich Text`: The Rich Text Field lets editors write and format dynamic content in a familiar interface. The content is saved as JSON in the database and can be converted to HTML or any other format needed.
+- `Join`: The Join Field is used to make Relationship and Upload fields available in the opposite direction. With a Join you can edit and view collections having reference to a specific collection document. The field itself acts as a virtual field, in that no new data is stored on the collection with a Join field. Instead, the Admin UI surfaces the related documents for a better editing experience and is surfaced by Payload's APIs.
+- `Row`: The Row Field is presentational-only and only affects the Admin Panel. By using it, you can arrange Fields next to each other horizontally.
+- `Select`: The Select Field provides a dropdown-style interface for choosing options from a predefined list as an enumeration.
+- `Tabs`: The Tabs Field is presentational-only and only affects the Admin Panel (unless a tab is named). By using it, you can place fields within a nice layout component that separates certain sub-fields by a tabbed interface.
+- `Text`: The Text Field is one of the most commonly used fields. It saves a string to the database and provides the Admin Panel with a simple text input.
+- `Textarea`: The Textarea Field is nearly identical to the Text Field but it features a slightly larger input that is better suited to edit longer text.
+- `UI`: The UI (user interface) Field gives you a ton of power to add your own React components directly into the Admin Panel, nested directly within your other fields. It has absolutely no effect on the data of your documents. It is presentational-only. Think of it as a way for you to "plug in" your own React components directly within your other fields, so you can provide your editors with new controls exactly where you want them to go.
+- `Upload`: The Upload Field allows for the selection of a Document from a Collection supporting Uploads, and formats the selection as a thumbnail in the Admin Panel.
 
-## Access Control
+## Collect/Field Examples
 
-Access control defines who can perform CRUD operations:
-
-```typescript
-import { Access } from 'payload/types';
-
-// Example access control functions
-export const isAdmin: Access = ({ req: { user } }) => {
-  return Boolean(user?.roles?.includes('admin'));
-};
-
-export const isAdminOrEditor: Access = ({ req: { user } }) => {
-  return Boolean(
-    user?.roles?.includes('admin') || user?.roles?.includes('editor')
-  );
-};
-
-export const isLoggedIn: Access = ({ req: { user } }) => {
-  return Boolean(user);
-};
-
-// Collection-level access control
-const access = {
-  create: isAdminOrEditor,
-  read: () => true, // Public read access
-  update: isAdminOrEditor,
-  delete: isAdmin,
-};
-
-// Field-level access control
-const sensitiveField = {
-  name: 'internalNotes',
-  type: 'text',
-  access: {
-    read: isAdmin,
-    update: isAdmin,
-  },
-};
-```
-
-## Hooks
-
-Hooks allow custom logic at various points in the document lifecycle:
+Examples of commonly used fields
 
 ```typescript
-// Collection hooks
-const hooks = {
-  beforeOperation: async ({ args }) => {
-    // Before any operation
-    return args;
-  },
-  beforeValidate: async ({ data, req, operation }) => {
-    // Before validation
-    return data;
-  },
-  beforeChange: async ({ data, req, operation }) => {
-    // Before saving to database
-    return data;
-  },
-  afterChange: async ({ doc, req, operation }) => {
-    // After create/update
-    return doc;
-  },
-  afterRead: async ({ doc, req }) => {
-    // After reading from database
-    return doc;
-  },
-  beforeDelete: async ({ req, id }) => {
-    // Before delete
-  },
-  afterDelete: async ({ req, id }) => {
-    // After delete
-  },
-};
+import type { CollectionConfig } from "payload";
 
-// Field hooks
-const fieldWithHooks = {
-  name: 'slug',
-  type: 'text',
-  hooks: {
-    beforeValidate: [
-      ({ value, data }) => {
-        if (data.title && !value) {
-          return slugify(data.title.toLowerCase());
-        }
-        return value;
-      },
-    ],
-  },
-};
-```
-
-## Globals
-
-Globals are single-instance collections for site-wide settings:
-
-```typescript
-import { GlobalConfig } from 'payload/types';
-
-const SiteSettings: GlobalConfig = {
-  slug: 'site-settings',
-  label: 'Site Settings',
+export const Media: CollectionConfig = {
+  slug: "media",
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'siteName',
-      label: 'Site Name',
-      type: 'text',
+      name: "alt",
+      type: "text",
       required: true,
     },
-    {
-      name: 'siteDescription',
-      label: 'Site Description',
-      type: 'textarea',
-    },
-    {
-      name: 'logo',
-      label: 'Site Logo',
-      type: 'upload',
-      relationTo: 'media',
-    },
   ],
-};
-
-export default SiteSettings;
-```
-
-## Custom Components
-
-PayloadCMS allows custom React components for the admin UI:
-
-```typescript
-import React from 'react';
-import { useField } from 'payload/components/forms';
-
-const CustomComponent = ({ path }) => {
-  const { value, setValue } = useField({ path });
-
-  return (
-    <div>
-      <input
-        type="text"
-        value={value || ''}
-        onChange={(e) => setValue(e.target.value)}
-      />
-    </div>
-  );
-};
-
-export default CustomComponent;
-```
-
-## Custom Endpoints
-
-You can create custom API endpoints:
-
-```typescript
-import { Payload } from 'payload';
-
-const customEndpoint = {
-  path: '/api/custom',
-  method: 'get',
-  handler: async (req, res, next) => {
-    try {
-      const { payload } = req;
-      
-      // Fetch data
-      const posts = await payload.find({
-        collection: 'posts',
-        where: {
-          status: {
-            equals: 'published',
-          },
-        },
-        sort: '-publishedDate',
-        limit: 10,
-      });
-      
-      res.status(200).json({
-        success: true,
-        data: posts,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+  upload: true,
 };
 ```
 
-## Plugins
-
-PayloadCMS supports plugins for extending functionality:
-
-```typescript
-import { Plugin } from 'payload/types';
-
-const customPlugin: Plugin = {
-  collections: [
-    // Additional collections
-  ],
-  globals: [
-    // Additional globals
-  ],
-  beforeInit: (payload) => {
-    // Run code before Payload initializes
-  },
-  afterInit: (payload) => {
-    // Run code after Payload initializes
-  },
-};
-```
-
-## Authentication
-
-A basic users collection with authentication:
-
-```typescript
-import { CollectionConfig } from 'payload/types';
-
-const Users: CollectionConfig = {
-  slug: 'users',
-  auth: {
-    // Enable authentication for this collection
-    useAPIKey: true, // Optional: enable API key authentication
-    tokenExpiration: 7200, // 2 hours
-    maxLoginAttempts: 5, // Lock account after 5 failed attempts
-    lockTime: 600000, // 10 minutes
-  },
-  admin: {
-    useAsTitle: 'email',
-  },
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'name',
-      type: 'text',
-    },
-    {
-      name: 'roles',
-      type: 'select',
-      hasMany: true,
-      options: ['admin', 'editor', 'user'],
-      defaultValue: ['user'],
-    },
-  ],
-};
-
-export default Users;
-```
-
-## Localization
-
-Enabling multi-language content:
-
-```typescript
-// In payload.config.ts
-export default buildConfig({
-  // ...
-  localization: {
-    defaultLocale: 'en',
-    locales: ['en', 'es', 'fr'],
-  },
-  // ...
-});
-
-// In a collection
-const Posts: CollectionConfig = {
-  // ...
-  fields: [
-    {
-      name: 'title',
-      type: 'text',
-      localized: true, // Enable localization for this field
-    },
-    // ...
-  ],
-};
-```
-
-## Query Operators
-
-Common query operators for filtering documents:
-
-```typescript
-// equals
-const exactMatch = {
-  status: {
-    equals: 'published',
-  },
-};
-
-// not_equals
-const notMatch = {
-  status: {
-    not_equals: 'draft',
-  },
-};
-
-// in
-const inArray = {
-  status: {
-    in: ['published', 'archived'],
-  },
-};
-
-// not_in
-const notInArray = {
-  status: {
-    not_in: ['draft', 'review'],
-  },
-};
-
-// greater_than / less_than
-const priceRange = {
-  price: {
-    greater_than: 10,
-    less_than: 100,
-  },
-};
-
-// like (substring match)
-const containsText = {
-  title: {
-    like: 'product',
-  },
-};
-
-// exists
-const hasField = {
-  featuredImage: {
-    exists: true,
-  },
-};
-
-// and / or for complex queries
-const complexQuery = {
-  and: [
-    {
-      status: {
-        equals: 'published',
-      },
-    },
-    {
-      or: [
-        {
-          title: {
-            like: 'featured',
-          },
-        },
-        {
-          featured: {
-            equals: true,
-          },
-        },
-      ],
-    },
-  ],
-};
-```
-
-## API Reference
-
-Common API operations:
-
-```typescript
-// Find documents
-const posts = await payload.find({
-  collection: 'posts',
-  where: {
-    status: {
-      equals: 'published',
-    },
-  },
-  sort: '-publishedDate',
-  limit: 10,
-  page: 1,
-  depth: 2, // populate relationships 2 levels deep
-});
-
-// Find by ID
-const post = await payload.findByID({
-  collection: 'posts',
-  id: '123',
-});
-
-// Create document
-const newPost = await payload.create({
-  collection: 'posts',
-  data: {
-    title: 'New Post',
-    content: 'Content here',
-  },
-});
-
-// Update document
-const updatedPost = await payload.update({
-  collection: 'posts',
-  id: '123',
-  data: {
-    title: 'Updated Title',
-  },
-});
-
-// Delete document
-await payload.delete({
-  collection: 'posts',
-  id: '123',
-});
-
-// Get global
-const siteSettings = await payload.findGlobal({
-  slug: 'site-settings',
-});
-
-// Update global
-await payload.updateGlobal({
-  slug: 'site-settings',
-  data: {
-    siteName: 'Updated Site Name',
-  },
-});
-```
